@@ -1,12 +1,11 @@
-const fs = require('fs');
 const XLSX = require('xlsx');
-const path = require('path');
+const { getOldJson } = require('../sevices/getOldJson');
+const { fileWriter } = require('../sevices/fileWriter');
 
 exports.generateChoresJson = () => {
   console.log("generateChoresJson")
 
   const excelPath = `D:\\NapirendTest.xlsx`;
-  const outputPath = `//192.168.0.150/config/www/chores.json`;
   const now = new Date();
   const currentHour = now.getHours();
   const wb = XLSX.readFile(excelPath);
@@ -14,14 +13,7 @@ exports.generateChoresJson = () => {
   const imageMap = {};
   const result = {};
 
-  let oldJson = {}
-  try {
-    if (fs.existsSync(outputPath)) {
-      oldJson = JSON.parse(fs.readFileSync(outputPath, 'utf8'))
-    }
-  } catch (error) {
-    console.error("Could not load previous chores.json:", err.message)
-  }
+  const oldJson = getOldJson()
 
   if (sheets.includes('Képek')) {
     const mapSheet = wb.Sheets['Képek'];
@@ -51,7 +43,6 @@ exports.generateChoresJson = () => {
     const data = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
     if (data.length < 2) return;
 
-
     const headers = data[0];
     let hourColIndex = headers.findIndex(h => {
       const hr = parseInt(String(h).split(':')[0], 10);
@@ -73,17 +64,15 @@ exports.generateChoresJson = () => {
       }
     }
 
-    
-      result[sheetName] = {
-        score: oldJson[sheetName]?.score ?? 0,
-        chores,
-      };
+    result[sheetName] = {
+      score: oldJson[sheetName]?.score ?? 0,
+      chores,
+    };
   });
 
   if (noChores) {
     result.message = `no chores at hour ${currentHour}`;
   }
 
-  fs.writeFileSync(outputPath, JSON.stringify(result, null, 2), 'utf8');
-  console.log('Chores JSON updated:', Object.keys(result));
+  fileWriter(result)
 }
