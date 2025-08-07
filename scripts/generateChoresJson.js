@@ -14,6 +14,15 @@ exports.generateChoresJson = () => {
   const imageMap = {};
   const result = {};
 
+  let oldJson = {}
+  try {
+    if (fs.existsSync(outputPath)) {
+      oldJson = JSON.parse(fs.readFileSync(outputPath, 'utf8'))
+    }
+  } catch (error) {
+    console.error("Could not load previous chores.json:", err.message)
+  }
+
   if (sheets.includes('Képek')) {
     const mapSheet = wb.Sheets['Képek'];
     const rows = XLSX.utils.sheet_to_json(mapSheet, { header: ['chore', 'image'] });
@@ -35,6 +44,7 @@ exports.generateChoresJson = () => {
     });
   }
 
+  let noChores = true
   sheets.forEach(sheetName => {
     if (sheetName === 'Képek') return;
     const ws = wb.Sheets[sheetName];
@@ -49,11 +59,11 @@ exports.generateChoresJson = () => {
     });
     if (hourColIndex < 0) return;
 
-
     const chores = [];
     for (let r = 1; r < data.length; r++) {
       const choreName = String(data[r][hourColIndex] || '').trim();
       if (choreName) {
+        noChores = false
         chores.push({
           name: choreName,
           kid: false,
@@ -63,15 +73,14 @@ exports.generateChoresJson = () => {
       }
     }
 
-    if (chores.length) {
+    
       result[sheetName] = {
-        score: 0,
-        chores
+        score: oldJson[sheetName]?.score ?? 0,
+        chores,
       };
-    }
   });
 
-  if (Object.keys(result).length === 0) {
+  if (noChores) {
     result.message = `no chores at hour ${currentHour}`;
   }
 
