@@ -12,6 +12,7 @@ app.post("/complete_chore", (req, res) => {
   console.log("Received chore completion:", payload);
 
   kidCompleteChore(payload)
+  res.status(200)
 });
 
 app.post('/update_chore', (req, res) => {

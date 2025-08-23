@@ -57,7 +57,7 @@ exports.generateChoresJson = () => {
         noChores = false
         chores.push({
           name: choreName,
-          kid: false,
+          kid: sheetName === "Anya",
           adult: false,
           image: imageMap[choreName] || ''
         });
