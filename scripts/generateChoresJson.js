@@ -48,11 +48,10 @@ exports.generateChoresJson = () => {
       const hr = parseInt(String(h).split(':')[0], 10);
       return !isNaN(hr) && hr === currentHour;
     });
-    if (hourColIndex < 0) return;
 
     const chores = [];
-    for (let r = 1; r < data.length; r++) {
-      const choreName = String(data[r][hourColIndex] || '').trim();
+    for (let i = 1; i < data.length; i++) {
+      const choreName = String(data[i][hourColIndex] || '').trim();
       if (choreName) {
         noChores = false
         chores.push({
@@ -64,15 +63,31 @@ exports.generateChoresJson = () => {
       }
     }
 
-    result[sheetName] = {
-      score: oldJson[sheetName]?.score ?? 0,
-      chores,
-    };
+    if (sheetName === 'Anya') {
+      const oldChores = oldJson["Anya"]?.chores || []
+      const oldNames = oldChores.map(c => c.name)
+      let merged = [...oldChores]
+
+      chores.forEach(c => {
+        if (!oldNames.includes(c.name)) {
+          merged.push(c)
+        }
+      })
+
+      result[sheetName] = {
+        score: 0,
+        chores: merged
+      }
+    } else {
+      result[sheetName] = {
+        score: oldJson[sheetName]?.score ?? 0,
+        chores,
+      };
+    }
   });
 
   if (noChores) {
     result.message = `no chores at hour ${currentHour}`;
   }
-
   fileWriter(result)
 }
