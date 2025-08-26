@@ -1,13 +1,14 @@
 const express = require("express");
 const { generateChoresJson } = require('./scripts/generateChoresJson');
 const { kidCompleteChore } = require("./scripts/kidCompleteChore");
+const { updateScore } = require("./scripts/updateScore");
 
 const app = express();
 const PORT = 5000;
 
 app.use(express.json());
 
-app.post("/complete_chore", (req, res) => {
+app.post('/complete_chore', (req, res) => {
   const payload = req.body;
   console.log("Received chore completion:", payload);
 
@@ -16,14 +17,15 @@ app.post("/complete_chore", (req, res) => {
 });
 
 app.post('/update_chore', (req, res) => {
-  try {
-    generateChoresJson();
-    res.status(200).json({ message: 'Chore JSON updated successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to update chores' });
-  }
+  generateChoresJson();
+  res.status(200).json({ message: 'Chore JSON updated successfully' });
 });
+
+app.post('/update_score', (req, res) => {
+  const payload = req.body;
+  updateScore(payload)
+  res.status(200)
+})
 
 async function startServer() {
   try {
