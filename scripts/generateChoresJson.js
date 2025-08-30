@@ -3,8 +3,6 @@ const { getOldJson } = require('../sevices/getOldJson');
 const { fileWriter } = require('../sevices/fileWriter');
 
 exports.generateChoresJson = () => {
-  console.log("generateChoresJson")
-
   const excelPath = `D:\\NapirendTest.xlsx`;
   const now = new Date();
   const currentHour = now.getHours();

@@ -1,9 +1,10 @@
+const { consoleLogger } = require("../services/consoleLogger")
 const { fileWriter } = require("../sevices/fileWriter")
 const { getOldJson } = require("../sevices/getOldJson")
 
 
 exports.updateScore = (payload) => {
-  console.log("score updated" + payload)
+  consoleLogger(`score updated + ${payload}`)
 
   const oldJson = getOldJson()
   let newJson = oldJson

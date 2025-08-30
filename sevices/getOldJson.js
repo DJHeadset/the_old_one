@@ -1,9 +1,10 @@
 const fs = require('fs');
+const { consoleLogger } = require('../services/consoleLogger');
 
 const outputPath = `//192.168.0.150/config/www/chores.json`;
 
 exports.getOldJson = () => {
-  console.log("Getting old JSON")
+  consoleLogger("Getting old JSON")
 
     let oldJson = {}
     try {

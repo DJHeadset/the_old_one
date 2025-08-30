@@ -2,6 +2,7 @@ const express = require("express");
 const { generateChoresJson } = require('./scripts/generateChoresJson');
 const { kidCompleteChore } = require("./scripts/kidCompleteChore");
 const { updateScore } = require("./scripts/updateScore");
+const { consoleLogger } = require("./services/consoleLogger");
 
 const app = express();
 const PORT = 5000;
@@ -10,7 +11,7 @@ app.use(express.json());
 
 app.post('/complete_chore', (req, res) => {
   const payload = req.body;
-  console.log("Received chore completion:", payload);
+  consoleLogger(`Received chore completion: ${payload}`);
 
   kidCompleteChore(payload)
   res.status(200)
