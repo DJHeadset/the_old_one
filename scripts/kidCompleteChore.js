@@ -11,11 +11,11 @@ exports.kidCompleteChore = (payload) => {
   if (payload.kid === "Anya") {
     newJson["Anya"].chores.splice(payload.index, 1)
   } else {
-    payload.pushed === "Kid" 
-    ?
-    newJson[payload.kid].chores[payload.index].kid = true
-    :
-    newJson[payload.kid].chores[payload.index].adult = true;
+    payload.pushed === "Kid"
+      ?
+      newJson[payload.kid].chores[payload.index].kid = true
+      :
+      newJson[payload.kid].chores[payload.index].adult = true;
   }
 
   fileWriter(newJson)

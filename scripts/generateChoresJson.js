@@ -79,6 +79,9 @@ exports.generateChoresJson = () => {
     } else {
       result[sheetName] = {
         score: oldJson[sheetName]?.score ?? 0,
+        availableScore: oldJson[sheetName]?.availableScore ?? 0,
+        actualScore: oldJson[sheetName]?.actualScore ?? 0,
+        percent: oldJson[sheetName]?.percent ?? 0,
         chores,
       };
     }
