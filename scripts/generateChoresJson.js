@@ -1,6 +1,6 @@
 const XLSX = require('xlsx');
-const { getOldJson } = require('../sevices/getOldJson');
-const { fileWriter } = require('../sevices/fileWriter');
+const { getOldJson } = require('../services/getOldJson');
+const { fileWriter } = require('../services/fileWriter');
 
 exports.generateChoresJson = () => {
   const excelPath = `D:\\NapirendTest.xlsx`;

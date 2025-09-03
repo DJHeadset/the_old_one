@@ -1,6 +1,7 @@
 const { consoleLogger } = require("../services/consoleLogger")
-const { fileWriter } = require("../sevices/fileWriter")
-const { getOldJson } = require("../sevices/getOldJson")
+const { fileWriter } = require("../services/fileWriter")
+const { getOldJson } = require("../services/getOldJson")
+
 
 exports.kidCompleteChore = (payload) => {
   consoleLogger(`${payload.kid} + " Completed chore #" + ${payload.index} + " Pushed " + ${payload.pushed}`)

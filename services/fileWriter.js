@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { consoleLogger } = require('../services/consoleLogger');
+const { consoleLogger } = require('./consoleLogger');
 
 exports.fileWriter = (result) => {
   consoleLogger("Writing JSON file")

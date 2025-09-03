@@ -1,7 +1,7 @@
 const { consoleLogger } = require("../services/consoleLogger")
 const { fileLogger } = require("../services/fileLogger")
-const { fileWriter } = require("../sevices/fileWriter")
-const { getOldJson } = require("../sevices/getOldJson")
+const { fileWriter } = require("../services/fileWriter")
+const { getOldJson } = require("../services/getOldJson")
 
 
 exports.updateHourly = () => {
