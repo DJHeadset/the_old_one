@@ -34,7 +34,7 @@ exports.updateHourly = () => {
 exports.updateScore = (payload) => {
   const oldJson = getOldJson()
   let newJson = { ...oldJson }
-  console.log(newJson[payload.kid].actualScore + " " + payload.point)
   newJson[payload.kid].actualScore += payload.point
+  fileLogger(`${payload.kid} ${payload.point}`)
   fileWriter(newJson)
 }
