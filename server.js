@@ -1,7 +1,7 @@
 const express = require("express");
 const { generateChoresJson } = require('./scripts/generateChoresJson');
 const { kidCompleteChore } = require("./scripts/kidCompleteChore");
-const { updateHourly } = require("./scripts/updateScore");
+const { updateHourly, updateScore } = require("./scripts/updateScore");
 const { consoleLogger } = require("./services/consoleLogger");
 
 const app = express();
@@ -23,8 +23,13 @@ app.post('/update_chore', (req, res) => {
 });
 
 app.post('/update_hourly', (req, res) => {
+  updateHourly()
+  res.status(200)
+})
+
+app.post('/update_score', (req, res) => {
   const payload = req.body;
-  updateHourly(payload)
+  updateScore(payload)
   res.status(200)
 })
 
