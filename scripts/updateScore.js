@@ -38,3 +38,28 @@ exports.updateScore = (payload) => {
   fileLogger(`${payload.kid} ${payload.point}`)
   fileWriter(newJson)
 }
+
+exports.updateMidnight = () => {
+  consoleLogger("Midnight reset running...");
+  const oldJson = getOldJson()
+  let newJson = { ...oldJson }
+
+  Object.keys(newJson).forEach(kid => {
+    let child = newJson[kid]
+    if (child.percent >= 75) {
+      child.score++
+    } else {
+      if (child.score <= 0) {
+        child.score--
+      } else if (child.score <= 7) {
+        child.score = 0
+      } else {
+        child.score -= 7
+      }
+    }
+    child.availableScore=0
+    child.actualScore=0
+    child.percent=0
+  })
+  fileWriter(newJson)
+}

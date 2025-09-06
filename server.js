@@ -1,8 +1,7 @@
 const express = require("express");
 const { generateChoresJson } = require('./scripts/generateChoresJson');
 const { kidCompleteChore } = require("./scripts/kidCompleteChore");
-const { updateHourly, updateScore } = require("./scripts/updateScore");
-const { consoleLogger } = require("./services/consoleLogger");
+const { updateHourly, updateScore, updateMidnight } = require("./scripts/updateScore");
 
 const app = express();
 const PORT = 5000;
@@ -11,19 +10,22 @@ app.use(express.json());
 
 app.post('/complete_chore', (req, res) => {
   const payload = req.body;
-  consoleLogger(`Received chore completion: ${payload}`);
-
   kidCompleteChore(payload)
   res.status(200)
 });
 
 app.post('/update_chore', (req, res) => {
   generateChoresJson();
-  res.status(200).json({ message: 'Chore JSON updated successfully' });
+  res.status(200);
 });
 
 app.post('/update_hourly', (req, res) => {
   updateHourly()
+  res.status(200)
+})
+
+app.post('/update_midnight', (req, res) => {
+  updateMidnight()
   res.status(200)
 })
 

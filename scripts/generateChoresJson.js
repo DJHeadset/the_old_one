@@ -34,7 +34,6 @@ exports.generateChoresJson = () => {
     });
   }
 
-  let noChores = true
   sheets.forEach(sheetName => {
     if (sheetName === 'Képek') return;
     const ws = wb.Sheets[sheetName];
@@ -51,7 +50,6 @@ exports.generateChoresJson = () => {
     for (let i = 1; i < data.length; i++) {
       const choreName = String(data[i][hourColIndex] || '').trim();
       if (choreName) {
-        noChores = false
         chores.push({
           name: choreName,
           kid: sheetName === "Anya",
@@ -87,8 +85,5 @@ exports.generateChoresJson = () => {
     }
   });
 
-  if (noChores) {
-    result.message = `no chores at hour ${currentHour}`;
-  }
   fileWriter(result)
 }
