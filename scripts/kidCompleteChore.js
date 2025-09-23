@@ -1,6 +1,7 @@
 const { consoleLogger } = require("../services/consoleLogger")
 const { fileWriter } = require("../services/fileWriter")
 const { getOldJson } = require("../services/getOldJson")
+const { percentCalculator } = require("../services/percentCalculator")
 
 
 exports.kidCompleteChore = (payload) => {
@@ -18,6 +19,6 @@ exports.kidCompleteChore = (payload) => {
       :
       newJson[payload.kid].chores[payload.index].adult = true;
   }
-
+  newJson[payload.kid].percent = percentCalculator(newJson[payload.kid])
   fileWriter(newJson)
 }

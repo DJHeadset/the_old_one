@@ -2,6 +2,7 @@ const { consoleLogger } = require("../services/consoleLogger")
 const { fileLogger } = require("../services/fileLogger")
 const { fileWriter } = require("../services/fileWriter")
 const { getOldJson } = require("../services/getOldJson")
+const { percentCalculator } = require("../services/percentCalculator")
 
 
 exports.updateHourly = () => {
@@ -19,7 +20,7 @@ exports.updateHourly = () => {
     }
     newJson[kid].availableScore = availablePoints
     newJson[kid].actualScore = actualPoints
-    newJson[kid].percent = percent
+    newJson[kid].percent = percentCalculator(newJson[kid])
 
     const failedChores = chores.filter(chore => chore.adult === false);
     if (failedChores.length > 0) {
@@ -36,6 +37,7 @@ exports.updateScore = (payload) => {
   let newJson = { ...oldJson }
   newJson[payload.kid].actualScore += payload.point
   fileLogger(`${payload.kid} ${payload.point}`)
+  newJson[payload.kid].percent = percentCalculator(newJson[payload.kid])
   fileWriter(newJson)
 }
 
@@ -57,9 +59,9 @@ exports.updateMidnight = () => {
         child.score -= 7
       }
     }
-    child.availableScore=0
-    child.actualScore=0
-    child.percent=0
+    child.availableScore = 0
+    child.actualScore = 0
+    child.percent = 0
   })
   fileWriter(newJson)
 }

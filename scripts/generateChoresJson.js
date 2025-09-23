@@ -1,6 +1,7 @@
 const XLSX = require('xlsx');
 const { getOldJson } = require('../services/getOldJson');
 const { fileWriter } = require('../services/fileWriter');
+const { percentCalculator } = require('../services/percentCalculator');
 
 exports.generateChoresJson = () => {
   const excelPath = `D:\\NapirendTest.xlsx`;
@@ -79,7 +80,8 @@ exports.generateChoresJson = () => {
         score: oldJson[sheetName]?.score ?? 0,
         availableScore: oldJson[sheetName]?.availableScore ?? 0,
         actualScore: oldJson[sheetName]?.actualScore ?? 0,
-        percent: oldJson[sheetName]?.percent ?? 0,
+        //percent: oldJson[sheetName]?.percent ?? 0,
+        percent: percentCalculator(oldJson[sheetName]),
         chores,
       };
     }
