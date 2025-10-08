@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { consoleLogger } = require('./consoleLogger');
+const path = require('path');
 
 exports.fileWriter = (result) => {
   consoleLogger("Writing JSON file")
