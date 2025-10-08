@@ -4,7 +4,7 @@ const { fileWriter } = require('../services/fileWriter');
 const { percentCalculator } = require('../services/percentCalculator');
 
 exports.generateChoresJson = () => {
-  const excelPath = `D:\\NapirendTest.xlsx`;
+  const excelPath = '/app/excel/NapirendTest.xlsx';
   const now = new Date();
   const currentHour = now.getHours();
   const wb = XLSX.readFile(excelPath);

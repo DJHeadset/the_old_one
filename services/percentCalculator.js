@@ -8,6 +8,5 @@ exports.percentCalculator = (kid) => {
     if (availablePoints > 0) {
       percent = Math.floor((actualPoints / availablePoints) * 100)
     }
-    console.log(availablePoints+" "+actualPoints+" "+percent)
     return percent
 }

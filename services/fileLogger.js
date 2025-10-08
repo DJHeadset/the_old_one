@@ -3,7 +3,7 @@ const fs = require("fs");
 const { consoleLogger } = require("./consoleLogger");
 
 exports.fileLogger = (message) => {
-  const logDir = path.join(require("os").homedir(), "Desktop", "Az_Oreg_naploja");
+  const logDir = '/app/logs';
 
   if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });
