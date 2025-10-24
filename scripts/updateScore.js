@@ -49,7 +49,7 @@ exports.updateMidnight = () => {
 
   Object.keys(newJson).forEach((kid) => {
     let child = newJson[kid];
-    if (child.percent >= 100) {
+    if (child.percent > 100) {
       child.score += 2;
     } else if (child.percent >= 75) {
       child.score++;
