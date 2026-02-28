@@ -83,7 +83,7 @@ exports.generateChoresJson = () => {
   const now = new Date();
   const currentHour = now.getHours();
   const wb = XLSX.readFile(excelPath);
-  const sheetNames = wb.SheetNames;
+  const sheets = wb.SheetNames;
   const oldState = getOldJson();
   const imageMap = buildImageMap(wb);
   const result = {};

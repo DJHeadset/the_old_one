@@ -81,7 +81,7 @@ function runHourlyUpdate(state) {
     child.availableScore += availableThisHour;
     child.actualScore += approvedThisHour;
     if (child.availableScore > 0) {
-      percentCalculator(newState[kid]);
+      percentCalculator(newState[child]);
     } else {
       child.percent = 100;
     }
