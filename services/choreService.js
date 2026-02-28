@@ -89,7 +89,7 @@ function runHourlyUpdate(state) {
     const failedChores = chores.filter((chore) => chore.adult === false);
     if (failedChores.length > 0) {
       const names = failedChores.map((c) => c.name).join(", ");
-      const message = `${kid} failed chores: ${names}`;
+      const message = `${child} failed chores: ${names}`;
       fileLogger(message);
     }
   });

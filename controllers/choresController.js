@@ -7,6 +7,7 @@ const {
 const { fileWriter } = require("../services/fileWriter");
 const { generateChoresJson } = require("../services/choreGeneratorService");
 const { getOldJson } = require("../services/getOldJson");
+const { fileLogger } = require("../services/fileLogger");
 
 function completeChore(req, res, next) {
   try {

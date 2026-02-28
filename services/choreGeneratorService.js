@@ -6,7 +6,7 @@ function buildImageMap(workbook) {
   const imageMap = {};
   if (!workbook.SheetNames.includes("Képek")) return imageMap;
 
-  const mapSheet = wb.Sheets["Képek"];
+  const mapSheet = workbook.Sheets["Képek"];
   const rows = XLSX.utils.sheet_to_json(mapSheet, {
     header: ["chore", "image"],
   });
