@@ -84,7 +84,7 @@ exports.generateChoresJson = () => {
   const currentHour = now.getHours();
   const wb = XLSX.readFile(excelPath);
   const sheets = wb.SheetNames;
-  const oldState = getOldJson();
+  const oldState = getOldJson("chores.json");
   const imageMap = buildImageMap(wb);
   const result = {};
 
@@ -107,5 +107,5 @@ exports.generateChoresJson = () => {
       result[sheetName] = buildKidState(oldState, sheetName, choresForHour);
     }
   });
-  fileWriter(result);
+  fileWriter("chores", result);
 };

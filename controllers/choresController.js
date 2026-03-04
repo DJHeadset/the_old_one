@@ -7,13 +7,12 @@ const {
 const { fileWriter } = require("../services/fileWriter");
 const { generateChoresJson } = require("../services/choreGeneratorService");
 const { getOldJson } = require("../services/getOldJson");
-const { fileLogger } = require("../services/fileLogger");
 
 function completeChore(req, res, next) {
   try {
-    const state = getOldJson();
+    const state = getOldJson("chores.json");
     const updatedState = completeChores(state, req.body);
-    fileWriter(updatedState);
+    fileWriter("chores", updatedState);
     res.status(200).json({ sucess: true });
   } catch (err) {
     next(err);
@@ -22,12 +21,9 @@ function completeChore(req, res, next) {
 
 function scoreUpdate(req, res, next) {
   try {
-    const state = getOldJson();
+    const state = getOldJson("chores.json");
     const updatedState = updatePoints(state, req.body);
-
-    fileWriter(updatedState);
-    fileLogger(`${payload.kid} ${payload.point}`);
-
+    fileWriter("chores", updatedState);
     res.status(200).json({ success: true });
   } catch (err) {
     next(err);
@@ -36,9 +32,9 @@ function scoreUpdate(req, res, next) {
 
 function resetMidnight(req, res, next) {
   try {
-    const state = getOldJson();
+    const state = getOldJson("chores.json");
     const updatedState = runMidnight(state);
-    fileWriter(updatedState);
+    fileWriter("chores", updatedState);
     res.status(200).json({ success: true });
   } catch (err) {
     next(err);
@@ -47,9 +43,9 @@ function resetMidnight(req, res, next) {
 
 function resetHourly(req, res, next) {
   try {
-    const state = getOldJson();
+    const state = getOldJson("chores.json");
     const updatedState = runHourlyUpdate(state);
-    fileWriter(updatedState);
+    fileWriter("chores", updatedState);
     res.status(200).json({ success: true });
   } catch (err) {
     next(err);

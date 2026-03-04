@@ -2,9 +2,11 @@ const express = require("express");
 const app = express();
 const PORT = 5000;
 const choresRouter = require("./routes/choresRoute");
+const rouletteRouter = require("./routes/rouletteRoute");
 
 app.use(express.json());
 app.use("/chores", choresRouter);
+app.use("/roulette", rouletteRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);

@@ -21,6 +21,7 @@ function updatePoints(state, payload) {
   const newState = structuredClone(state);
   newState[payload.kid].actualScore += payload.point;
   newState[payload.kid].percent = percentCalculator(newState[payload.kid]);
+  fileLogger(`${payload.kid} ${payload.point}`);
   return newState;
 }
 
@@ -80,11 +81,6 @@ function runHourlyUpdate(state) {
 
     child.availableScore += availableThisHour;
     child.actualScore += approvedThisHour;
-    if (child.availableScore > 0) {
-      percentCalculator(newState[child]);
-    } else {
-      child.percent = 100;
-    }
 
     const failedChores = chores.filter((chore) => chore.adult === false);
     if (failedChores.length > 0) {
@@ -92,6 +88,8 @@ function runHourlyUpdate(state) {
       const message = `${child} failed chores: ${names}`;
       fileLogger(message);
     }
+    child.chores = [];
+    child.percent = percentCalculator(child);
   });
   return newState;
 }
