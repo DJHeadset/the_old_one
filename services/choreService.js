@@ -11,6 +11,7 @@ function completeChores(state, payload) {
       newState[payload.kid].chores[payload.index].kid = true;
     } else {
       newState[payload.kid].chores[payload.index].adult = true;
+      newState[payload.kid].percent = percentCalculator(newState[payload.kid]);
     }
   }
 
@@ -42,7 +43,7 @@ function runMidnight(state) {
     const child = newState[key];
     if (!child || typeof child !== "object") return;
 
-    if (child.percent >= 100) {
+    if (child.percent > 100) {
       child.score += 2;
     } else if (child.percent >= 75) {
       child.score++;
