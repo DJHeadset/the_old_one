@@ -5,8 +5,13 @@ const cors = require("cors")
 const choresRouter = require("./routes/choresRoute");
 const rouletteRouter = require("./routes/rouletteRoute");
 
+const allowedOrigins = [
+  "http://192.168.0.38:3000",
+  "http://localhost:3000",
+]
+
 app.use(cors({
-  origin: "http://192.168.0.38:3000",
+  origin: allowedOrigins,
   credentials: true
 }))
 app.use(express.json());
