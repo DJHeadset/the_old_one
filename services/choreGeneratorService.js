@@ -75,11 +75,12 @@ function buildSkills(oldState, kidName, skillDefinitions) {
     //console.log("XP: " + xp);
 
     //const stars = Math.min(Math.floor(xp / 5), 3);
+    const stars = 0
 
     return {
       name: skillName,
       xp: 0,
-      stars: 0,
+      stars,
       title: stars > 0 ? titles[stars] : "",
     };
   });
