@@ -58,28 +58,23 @@ function buildSkillDefinitions(workbook) {
 }
 
 function buildSkills(oldState, kidName, skillDefinitions) {
+  console.log("buildSkills")
   const oldSkills = oldState[kidName]?.skills || [];
 
   return Object.keys(skillDefinitions).map((skillName) => {
-    console.log(skillName);
 
     const titles = skillDefinitions[skillName];
 
-    const existing = oldSkills.find((s) => s.name === skillName);
+    const existing = oldSkills.find(
+      s => s.name === skillName
+    );
 
-    if (existing) {
-      return existing;
-    }
-
-    //const xp = Math.floor(Math.random() * 16); // 0-15
-    //console.log("XP: " + xp);
-
-    //const stars = Math.min(Math.floor(xp / 5), 3);
-    const stars = 0
+    const xp = existing?.xp ?? 0;
+    const stars = Math.min(Math.floor(xp / 5), 3);
 
     return {
       name: skillName,
-      xp: 0,
+      xp,
       stars,
       title: stars > 0 ? titles[stars] : "",
     };
@@ -121,23 +116,25 @@ function buildAnyaState(oldState, newChores) {
       merged.push(chore);
     }
   });
-  return {
-    score: 0,
-    chores: merged,
-  };
+return {
+  ...oldState["Anya"],
+  score: oldState["Anya"]?.score ?? 0,
+  chores: merged,
+};
 }
 
 function buildKidState(oldState, kidName, chores, skillDefinitions) {
-  //console.log("buildKidState")
+  console.log("buildKidState")
+  console.log(chores)
   const skills = buildSkills(oldState, kidName, skillDefinitions);
   return {
     score: oldState[kidName]?.score ?? 0,
     availableScore: oldState[kidName]?.availableScore ?? 0,
     actualScore: oldState[kidName]?.actualScore ?? 0,
     percent: oldState[kidName]?.percent ?? 0,
-
-    skills,
-    chores,
+    activeTitle: oldState[kidName]?.activeTitle ?? "",
+    chores: chores,
+    skills: skills,
   };
 }
 
@@ -166,6 +163,7 @@ exports.generateChoresJson = () => {
       currentHour,
       imageMap,
     );
+    //console.log(choresForHour)
 
     if (sheetName === "Anya") {
       result[sheetName] = buildAnyaState(oldState, choresForHour);
