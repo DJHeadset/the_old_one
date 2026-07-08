@@ -27,6 +27,64 @@ function buildImageMap(workbook) {
   return imageMap;
 }
 
+function buildSkillDefinitions(workbook) {
+  const skillDefinitions = {};
+
+  if (!workbook.SheetNames.includes("Feladat")) {
+    return skillDefinitions;
+  }
+
+  const sheet = workbook.Sheets["Feladat"];
+
+  const rows = XLSX.utils.sheet_to_json(sheet, {
+    header: 1,
+    defval: "",
+  });
+
+  for (let i = 1; i < rows.length; i++) {
+    const skillName = String(rows[i][0] || "").trim();
+    //console.log("SKill " + skillName)
+
+    if (!skillName) continue;
+
+    skillDefinitions[skillName] = {
+      1: String(rows[i][1] || "").trim(),
+      2: String(rows[i][2] || "").trim(),
+      3: String(rows[i][3] || "").trim(),
+    };
+  }
+
+  return skillDefinitions;
+}
+
+function buildSkills(oldState, kidName, skillDefinitions) {
+  const oldSkills = oldState[kidName]?.skills || [];
+
+  return Object.keys(skillDefinitions).map((skillName) => {
+    console.log(skillName);
+
+    const titles = skillDefinitions[skillName];
+
+    const existing = oldSkills.find((s) => s.name === skillName);
+
+    if (existing) {
+      return existing;
+    }
+
+    //const xp = Math.floor(Math.random() * 16); // 0-15
+    //console.log("XP: " + xp);
+
+    //const stars = Math.min(Math.floor(xp / 5), 3);
+
+    return {
+      name: skillName,
+      xp: 0,
+      stars: 0,
+      title: stars > 0 ? titles[stars] : "",
+    };
+  });
+}
+
 function extractChoresForHour(data, sheetName, currentHour, imageMap) {
   const headers = data[0];
 
@@ -68,17 +126,22 @@ function buildAnyaState(oldState, newChores) {
   };
 }
 
-function buildKidState(oldState, kidName, chores) {
+function buildKidState(oldState, kidName, chores, skillDefinitions) {
+  //console.log("buildKidState")
+  const skills = buildSkills(oldState, kidName, skillDefinitions);
   return {
     score: oldState[kidName]?.score ?? 0,
     availableScore: oldState[kidName]?.availableScore ?? 0,
     actualScore: oldState[kidName]?.actualScore ?? 0,
     percent: oldState[kidName]?.percent ?? 0,
+
+    skills,
     chores,
   };
 }
 
 exports.generateChoresJson = () => {
+  console.log("reading excel");
   const excelPath = "/app/excel/NapirendTest.xlsx";
   const now = new Date();
   const currentHour = now.getHours();
@@ -86,10 +149,12 @@ exports.generateChoresJson = () => {
   const sheets = wb.SheetNames;
   const oldState = getOldJson("chores.json");
   const imageMap = buildImageMap(wb);
+  const skillDefinitions = buildSkillDefinitions(wb);
   const result = {};
 
   sheets.forEach((sheetName) => {
-    if (sheetName === "Képek") return;
+    //console.log(sheetName)
+    if (sheetName === "Képek" || sheetName === "Feladat") return;
     const sheet = wb.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
     if (data.length < 2) return;
@@ -104,7 +169,12 @@ exports.generateChoresJson = () => {
     if (sheetName === "Anya") {
       result[sheetName] = buildAnyaState(oldState, choresForHour);
     } else {
-      result[sheetName] = buildKidState(oldState, sheetName, choresForHour);
+      result[sheetName] = buildKidState(
+        oldState,
+        sheetName,
+        choresForHour,
+        skillDefinitions,
+      );
     }
   });
   fileWriter("chores", result);
