@@ -95,4 +95,41 @@ function runHourlyUpdate(state) {
   return newState;
 }
 
-module.exports = { completeChores, updatePoints, runMidnight, runHourlyUpdate };
+function calculateStars(xp) {
+  return Math.min(Math.floor(xp / 5), 3);
+}
+
+function calculateTitle(stars, titles) {
+  if (!titles || stars <= 0) return "";
+  return titles[stars] || "";
+}
+
+function buildSkills(oldState, kidName, skillDefinitions) {
+  const oldSkills = oldState[kidName]?.skills || [];
+
+  return Object.keys(skillDefinitions).map((skillName) => {
+    const titles = skillDefinitions[skillName];
+
+    const existing = oldSkills.find((s) => s.name === skillName);
+
+    const xp = existing?.xp ?? 0;
+    const stars = calculateStars(xp);
+    const title = calculateTitle(stars, titles);
+
+    return {
+      name: skillName,
+      xp,
+      stars,
+      title,
+    };
+  });
+}
+module.exports = {
+  completeChores,
+  updatePoints,
+  runMidnight,
+  runHourlyUpdate,
+  calculateStars,
+  calculateTitle,
+  buildSkills,
+};

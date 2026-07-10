@@ -1,6 +1,7 @@
 const XLSX = require("xlsx");
 const { getOldJson } = require("./getOldJson");
 const { fileWriter } = require("./fileWriter");
+const { calculateStars, calculateTitle } = require("./choreService");
 
 function buildImageMap(workbook) {
   const imageMap = {};
@@ -58,25 +59,23 @@ function buildSkillDefinitions(workbook) {
 }
 
 function buildSkills(oldState, kidName, skillDefinitions) {
-  console.log("buildSkills")
+  //console.log("buildSkills");
   const oldSkills = oldState[kidName]?.skills || [];
 
   return Object.keys(skillDefinitions).map((skillName) => {
-
     const titles = skillDefinitions[skillName];
 
-    const existing = oldSkills.find(
-      s => s.name === skillName
-    );
+    const existing = oldSkills.find((s) => s.name === skillName);
 
     const xp = existing?.xp ?? 0;
-    const stars = Math.min(Math.floor(xp / 5), 3);
+    const stars = calculateStars(xp);
+    const title = calculateTitle(stars, titles);
 
     return {
       name: skillName,
       xp,
       stars,
-      title: stars > 0 ? titles[stars] : "",
+      title,
     };
   });
 }
@@ -116,16 +115,16 @@ function buildAnyaState(oldState, newChores) {
       merged.push(chore);
     }
   });
-return {
-  ...oldState["Anya"],
-  score: oldState["Anya"]?.score ?? 0,
-  chores: merged,
-};
+  return {
+    ...oldState["Anya"],
+    score: oldState["Anya"]?.score ?? 0,
+    chores: merged,
+  };
 }
 
 function buildKidState(oldState, kidName, chores, skillDefinitions) {
-  console.log("buildKidState")
-  console.log(chores)
+  //console.log("buildKidState");
+  //console.log(chores);
   const skills = buildSkills(oldState, kidName, skillDefinitions);
   return {
     score: oldState[kidName]?.score ?? 0,
@@ -133,13 +132,14 @@ function buildKidState(oldState, kidName, chores, skillDefinitions) {
     actualScore: oldState[kidName]?.actualScore ?? 0,
     percent: oldState[kidName]?.percent ?? 0,
     activeTitle: oldState[kidName]?.activeTitle ?? "",
+    gold: oldState[kidName]?.gold ?? 0,
     chores: chores,
     skills: skills,
   };
 }
 
 exports.generateChoresJson = () => {
-  console.log("reading excel");
+  //console.log("reading excel");
   const excelPath = "/app/excel/NapirendTest.xlsx";
   const now = new Date();
   const currentHour = now.getHours();
@@ -177,4 +177,7 @@ exports.generateChoresJson = () => {
     }
   });
   fileWriter("chores", result);
+  fileWriter("tasks", {
+    skills: skillDefinitions,
+  });
 };
