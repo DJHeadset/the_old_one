@@ -12,7 +12,6 @@ const { getOldJson } = require("../services/getOldJson");
 const XLSX = require("xlsx");
 
 function serveChore(req, res, next) {
-  //console.log("serve")
   try {
     const state = getOldJson("chores.json");
     res.status(200).json(state);
@@ -136,6 +135,13 @@ function regenerateChores(req, res, next) {
   }
 }
 
+function punishment(req, res, next) {
+  const { kid, reason } = req.body;
+  console.log(req.body)
+  console.log(kid, reason)
+  res.status(200).json({ kid: reason });
+}
+
 module.exports = {
   serveChore,
   completeChore,
@@ -144,4 +150,5 @@ module.exports = {
   resetHourly,
   resetMidnight,
   scoreUpdate,
+  punishment,
 };

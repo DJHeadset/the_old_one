@@ -8,6 +8,7 @@ const {
   scoreUpdate,
   extraChoreComplete,
   serveChore,
+  punishment,
 } = require("../controllers/choresController");
 
 router.get("/get_chores", serveChore);
@@ -17,5 +18,6 @@ router.post("/update_chore", regenerateChores);
 router.post("/update_hourly", resetHourly);
 router.post("/update_midnight", resetMidnight);
 router.post("/update_score", scoreUpdate);
+router.post("/punishment", punishment)
 
 module.exports = router;

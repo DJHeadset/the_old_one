@@ -44,7 +44,7 @@ function buildSkillDefinitions(workbook) {
 
   for (let i = 1; i < rows.length; i++) {
     const skillName = String(rows[i][0] || "").trim();
-    //console.log("SKill " + skillName)
+    console.log(String(rows[i][1] || "").trim())
 
     if (!skillName) continue;
 
@@ -56,6 +56,38 @@ function buildSkillDefinitions(workbook) {
   }
 
   return skillDefinitions;
+}
+
+function buildWarningDefinitions(workbook) {
+  const warnings = [];
+
+  if (!workbook.SheetNames.includes("Warning")) {
+    return warnings;
+  }
+
+  const sheet = workbook.Sheets["Warning"];
+
+  const rows = XLSX.utils.sheet_to_json(sheet, {
+    header: 1,
+    defval: "",
+  });
+
+  // Skip header row
+  for (let i = 0; i < rows.length; i++) {
+    const reason = String(rows[i][0] || "").trim(); // Column B
+    const points = Number(rows[i][1] || 0); // Column C
+
+    if (!reason) continue;
+
+    //console.log(reason, points)
+
+    warnings.push({
+      reason,
+      points,
+    });
+  }
+
+  return warnings;
 }
 
 function buildSkills(oldState, kidName, skillDefinitions) {
@@ -123,8 +155,6 @@ function buildAnyaState(oldState, newChores) {
 }
 
 function buildKidState(oldState, kidName, chores, skillDefinitions) {
-  //console.log("buildKidState");
-  //console.log(chores);
   const skills = buildSkills(oldState, kidName, skillDefinitions);
   return {
     score: oldState[kidName]?.score ?? 0,
@@ -139,7 +169,6 @@ function buildKidState(oldState, kidName, chores, skillDefinitions) {
 }
 
 exports.generateChoresJson = () => {
-  //console.log("reading excel");
   const excelPath = "/app/excel/NapirendTest.xlsx";
   const now = new Date();
   const currentHour = now.getHours();
@@ -148,11 +177,17 @@ exports.generateChoresJson = () => {
   const oldState = getOldJson("chores.json");
   const imageMap = buildImageMap(wb);
   const skillDefinitions = buildSkillDefinitions(wb);
+  const warningDefinitions = buildWarningDefinitions(wb);
   const result = {};
 
   sheets.forEach((sheetName) => {
-    //console.log(sheetName)
-    if (sheetName === "Képek" || sheetName === "Feladat") return;
+    if (
+      sheetName === "Képek" ||
+      sheetName === "Feladat" ||
+      sheetName === "Warning" ||
+      sheetName === "Shop"
+    )
+      return;
     const sheet = wb.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
     if (data.length < 2) return;
@@ -176,8 +211,10 @@ exports.generateChoresJson = () => {
       );
     }
   });
+
   fileWriter("chores", result);
   fileWriter("tasks", {
     skills: skillDefinitions,
+    warnings: warningDefinitions,
   });
 };
