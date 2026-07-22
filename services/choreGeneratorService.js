@@ -44,7 +44,7 @@ function buildSkillDefinitions(workbook) {
 
   for (let i = 1; i < rows.length; i++) {
     const skillName = String(rows[i][0] || "").trim();
-    console.log(String(rows[i][1] || "").trim())
+    //console.log(String(rows[i][1] || "").trim())
 
     if (!skillName) continue;
 
@@ -162,6 +162,7 @@ function buildKidState(oldState, kidName, chores, skillDefinitions) {
     actualScore: oldState[kidName]?.actualScore ?? 0,
     percent: oldState[kidName]?.percent ?? 0,
     activeTitle: oldState[kidName]?.activeTitle ?? "",
+    warnings: oldState[kidName]?.warnings ?? 0,
     gold: oldState[kidName]?.gold ?? 0,
     chores: chores,
     skills: skills,

@@ -45,8 +45,10 @@ function runMidnight(state) {
 
     if (child.percent > 100) {
       child.score += 2;
+      child.gold += 20;
     } else if (child.percent >= 75) {
       child.score++;
+      child.gold += 10;
     } else {
       if (child.score <= 0) {
         child.score--;
@@ -59,6 +61,7 @@ function runMidnight(state) {
     child.availableScore = 0;
     child.actualScore = 0;
     child.percent = 0;
+    child.warnings = 0;
   });
   newState._meta.lastMidnightRun = today;
 

@@ -37,7 +37,7 @@ function extraChoreComplete(req, res, next) {
 
     console.log("Extra chore:", kid, task);
 
-    const wb = XLSX.readFile("/app/excel/NapirendTest.xlsx");
+    //const wb = XLSX.readFile("/app/excel/NapirendTest.xlsx");
     const skillDefinitions = getOldJson("tasks.json");
 
     if (!kid || !task) {
@@ -136,10 +136,34 @@ function regenerateChores(req, res, next) {
 }
 
 function punishment(req, res, next) {
-  const { kid, reason } = req.body;
-  console.log(req.body)
-  console.log(kid, reason)
-  res.status(200).json({ kid: reason });
+  try {
+    const { kid, reason } = req.body;
+    //console.log(req.body)
+    console.log(kid, reason);
+    const tasks = getOldJson("tasks.json");
+    const state = getOldJson("chores.json");
+
+    const warning = tasks.warnings.find((w) => w.reason === reason);
+
+    if (!warning) {
+      return res.status(404).json({
+        error: `Unknown warning: ${reason}`,
+      });
+    }
+
+    const deduction = warning.points;
+    //console.log(`${kid}: -${deduction} gold from (${state[kid].gold}) `);
+
+    const newGold = Math.max(0, state[kid].gold - deduction);
+    state[kid].gold = newGold;
+    state[kid].warnings += 1;
+
+    fileWriter("chores", state);
+
+    res.status(200).json({ kid: reason });
+  } catch (err) {
+    next(err);
+  }
 }
 
 module.exports = {
