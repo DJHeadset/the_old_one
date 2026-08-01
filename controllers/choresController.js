@@ -5,6 +5,7 @@ const {
   runHourlyUpdate,
   calculateStars,
   calculateTitle,
+  personOfDay,
 } = require("../services/choreService");
 const { fileWriter } = require("../services/fileWriter");
 const { generateChoresJson } = require("../services/choreGeneratorService");
@@ -37,7 +38,6 @@ function extraChoreComplete(req, res, next) {
 
     console.log("Extra chore:", kid, task);
 
-    //const wb = XLSX.readFile("/app/excel/NapirendTest.xlsx");
     const skillDefinitions = getOldJson("tasks.json");
 
     if (!kid || !task) {
@@ -109,6 +109,11 @@ function resetMidnight(req, res, next) {
     const state = getOldJson("chores.json");
     const updatedState = runMidnight(state);
     fileWriter("chores", updatedState);
+
+    const pod = getOldJson("tasks.json");
+    const updatedStatus = personOfDay(pod);
+    fileWriter("tasks", updatedStatus);
+
     res.status(200).json({ success: true });
   } catch (err) {
     next(err);
@@ -138,8 +143,6 @@ function regenerateChores(req, res, next) {
 function punishment(req, res, next) {
   try {
     const { kid, reason } = req.body;
-    //console.log(req.body)
-    console.log(kid, reason);
     const tasks = getOldJson("tasks.json");
     const state = getOldJson("chores.json");
 
@@ -152,8 +155,6 @@ function punishment(req, res, next) {
     }
 
     const deduction = warning.points;
-    //console.log(`${kid}: -${deduction} gold from (${state[kid].gold}) `);
-
     const newGold = Math.max(0, state[kid].gold - deduction);
     state[kid].gold = newGold;
     state[kid].warnings += 1;

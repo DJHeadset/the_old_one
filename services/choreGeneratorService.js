@@ -1,7 +1,12 @@
 const XLSX = require("xlsx");
 const { getOldJson } = require("./getOldJson");
 const { fileWriter } = require("./fileWriter");
-const { calculateStars, calculateTitle } = require("./choreService");
+const {
+  calculateStars,
+  calculateTitle,
+  personOfDay,
+} = require("./choreService");
+const { consoleLogger } = require("./consoleLogger");
 
 function buildImageMap(workbook) {
   const imageMap = {};
@@ -44,7 +49,6 @@ function buildSkillDefinitions(workbook) {
 
   for (let i = 1; i < rows.length; i++) {
     const skillName = String(rows[i][0] || "").trim();
-    //console.log(String(rows[i][1] || "").trim())
 
     if (!skillName) continue;
 
@@ -79,8 +83,6 @@ function buildWarningDefinitions(workbook) {
 
     if (!reason) continue;
 
-    //console.log(reason, points)
-
     warnings.push({
       reason,
       points,
@@ -90,8 +92,42 @@ function buildWarningDefinitions(workbook) {
   return warnings;
 }
 
+exports.choosePersonOfDay = (pod) => {
+  const children = ["Zolika", "Manó", "Bogi"];
+
+  const start = new Date("2025-04-26");
+  const today = new Date();
+  const days = Math.floor((today - start) / 86400000);
+
+  const kid = children[days % children.length];
+
+  pod.dadLast++;
+  pod.momLast++;
+
+  const random = Math.floor(Math.random() * 100);
+
+  if (random < pod.dadLast) {
+    pod.tomorrow = "Dad";
+    pod.dadLast = -1;
+  } else if (random < pod.dadLast + pod.momLast) {
+    pod.tomorrow = "Mom";
+    pod.momLast = -1;
+  } else {
+    pod.tomorrow = kid;
+  }
+
+  return pod;
+};
+
+function updatePersonOfDay() {
+  pod = getOldJson(tasks.json);
+  pod.dadLast = pod.dadLast ? pod.dadLast : 0;
+  pod.momLast = pod.momLast ? pod.momLast : 0;
+  pod.today = pod.tomorrow ? pod.tomorrow : "";
+  pod.tomorrow;
+}
+
 function buildSkills(oldState, kidName, skillDefinitions) {
-  //console.log("buildSkills");
   const oldSkills = oldState[kidName]?.skills || [];
 
   return Object.keys(skillDefinitions).map((skillName) => {
@@ -179,6 +215,7 @@ exports.generateChoresJson = () => {
   const imageMap = buildImageMap(wb);
   const skillDefinitions = buildSkillDefinitions(wb);
   const warningDefinitions = buildWarningDefinitions(wb);
+  const personOfDay = updatePersonOfDay();
   const result = {};
 
   sheets.forEach((sheetName) => {
@@ -199,7 +236,6 @@ exports.generateChoresJson = () => {
       currentHour,
       imageMap,
     );
-    //console.log(choresForHour)
 
     if (sheetName === "Anya") {
       result[sheetName] = buildAnyaState(oldState, choresForHour);
@@ -217,5 +253,6 @@ exports.generateChoresJson = () => {
   fileWriter("tasks", {
     skills: skillDefinitions,
     warnings: warningDefinitions,
+    personOfDay,
   });
 };

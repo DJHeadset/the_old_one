@@ -1,4 +1,6 @@
+const { choosePersonOfDay } = require("./choreGeneratorService");
 const { fileLogger } = require("./fileLogger");
+const { getOldJson } = require("./getOldJson");
 const { percentCalculator } = require("./percentCalculator");
 
 function completeChores(state, payload) {
@@ -68,6 +70,13 @@ function runMidnight(state) {
   return newState;
 }
 
+function personOfDay(pod) {
+  pod.dadLast = pod.dadLast ?? 0;
+  pod.momLast = pod.momLast ?? 0;
+  pod.today = pod.tomorrow ? pod.tomorrow : "";
+  return choosePersonOfDay(pod);
+}
+
 function runHourlyUpdate(state) {
   const newState = structuredClone(state);
 
@@ -131,6 +140,7 @@ module.exports = {
   completeChores,
   updatePoints,
   runMidnight,
+  personOfDay,
   runHourlyUpdate,
   calculateStars,
   calculateTitle,
