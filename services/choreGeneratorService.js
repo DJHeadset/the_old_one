@@ -107,10 +107,10 @@ exports.choosePersonOfDay = (pod) => {
   const random = Math.floor(Math.random() * 100);
 
   if (random < pod.dadLast) {
-    pod.tomorrow = "Dad";
+    pod.tomorrow = "Apa";
     pod.dadLast = -1;
   } else if (random < pod.dadLast + pod.momLast) {
-    pod.tomorrow = "Mom";
+    pod.tomorrow = "Anya";
     pod.momLast = -1;
   } else {
     pod.tomorrow = kid;
