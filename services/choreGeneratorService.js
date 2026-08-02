@@ -120,7 +120,7 @@ exports.choosePersonOfDay = (pod) => {
 };
 
 function updatePersonOfDay() {
-  pod = getOldJson(tasks.json);
+  pod = getOldJson("tasks.json");
   pod.dadLast = pod.dadLast ? pod.dadLast : 0;
   pod.momLast = pod.momLast ? pod.momLast : 0;
   pod.today = pod.tomorrow ? pod.tomorrow : "";
