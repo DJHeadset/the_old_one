@@ -1,12 +1,9 @@
 const XLSX = require("xlsx");
 const { getOldJson } = require("./getOldJson");
 const { fileWriter } = require("./fileWriter");
-const {
-  calculateStars,
-  calculateTitle,
-  personOfDay,
-} = require("./choreService");
+const { calculateStars, calculateTitle } = require("./choreService");
 const { consoleLogger } = require("./consoleLogger");
+const { updatePersonOfDay } = require("./personOfDayService");
 
 function buildImageMap(workbook) {
   const imageMap = {};
@@ -90,41 +87,6 @@ function buildWarningDefinitions(workbook) {
   }
 
   return warnings;
-}
-
-exports.choosePersonOfDay = (pod) => {
-  const children = ["Zolika", "Manó", "Bogi"];
-
-  const start = new Date("2025-04-26");
-  const today = new Date();
-  const days = Math.floor((today - start) / 86400000);
-
-  const kid = children[days % children.length];
-
-  pod.dadLast++;
-  pod.momLast++;
-
-  const random = Math.floor(Math.random() * 100);
-
-  if (random < pod.dadLast) {
-    pod.tomorrow = "Apa";
-    pod.dadLast = -1;
-  } else if (random < pod.dadLast + pod.momLast) {
-    pod.tomorrow = "Anya";
-    pod.momLast = -1;
-  } else {
-    pod.tomorrow = kid;
-  }
-
-  return pod;
-};
-
-function updatePersonOfDay() {
-  pod = getOldJson("tasks.json");
-  pod.dadLast = pod.dadLast ? pod.dadLast : 0;
-  pod.momLast = pod.momLast ? pod.momLast : 0;
-  pod.today = pod.tomorrow ? pod.tomorrow : "";
-  pod.tomorrow;
 }
 
 function buildSkills(oldState, kidName, skillDefinitions) {

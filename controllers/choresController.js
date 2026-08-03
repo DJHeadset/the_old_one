@@ -5,12 +5,12 @@ const {
   runHourlyUpdate,
   calculateStars,
   calculateTitle,
-  personOfDay,
 } = require("../services/choreService");
 const { fileWriter } = require("../services/fileWriter");
 const { generateChoresJson } = require("../services/choreGeneratorService");
 const { getOldJson } = require("../services/getOldJson");
 const XLSX = require("xlsx");
+const { updatePersonOfDay } = require("../services/personOfDayService");
 
 function serveChore(req, res, next) {
   try {
@@ -56,7 +56,7 @@ function extraChoreComplete(req, res, next) {
 
     // Add XP to the task
     if (!state[kid].skills) {
-      state[kid].skills = {};
+      state[kid].skills = [];
     }
 
     if (!state[kid].skills[task]) {
@@ -107,14 +107,18 @@ function scoreUpdate(req, res, next) {
 function resetMidnight(req, res, next) {
   try {
     const state = getOldJson("chores.json");
+
     const updatedState = runMidnight(state);
+
     fileWriter("chores", updatedState);
 
-    const pod = getOldJson("tasks.json");
-    const updatedStatus = personOfDay(pod);
-    fileWriter("tasks", updatedStatus);
+    updatePersonOfDay();
 
-    res.status(200).json({ success: true });
+    generateChoresJson();
+
+    res.json({
+      success: true,
+    });
   } catch (err) {
     next(err);
   }
@@ -124,8 +128,14 @@ function resetHourly(req, res, next) {
   try {
     const state = getOldJson("chores.json");
     const updatedState = runHourlyUpdate(state);
+
     fileWriter("chores", updatedState);
-    res.status(200).json({ success: true });
+
+    generateChoresJson();
+
+    res.json({
+      success: true,
+    });
   } catch (err) {
     next(err);
   }
@@ -145,7 +155,6 @@ function punishment(req, res, next) {
     const { kid, reason } = req.body;
     const tasks = getOldJson("tasks.json");
     const state = getOldJson("chores.json");
-
     const warning = tasks.warnings.find((w) => w.reason === reason);
 
     if (!warning) {
