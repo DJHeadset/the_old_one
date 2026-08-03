@@ -174,10 +174,10 @@ exports.generateChoresJson = () => {
   const wb = XLSX.readFile(excelPath);
   const sheets = wb.SheetNames;
   const oldState = getOldJson("chores.json");
+  const tasks = getOldJson("tasks.json");
   const imageMap = buildImageMap(wb);
   const skillDefinitions = buildSkillDefinitions(wb);
   const warningDefinitions = buildWarningDefinitions(wb);
-  const personOfDay = updatePersonOfDay();
   const result = {};
 
   sheets.forEach((sheetName) => {
@@ -212,9 +212,9 @@ exports.generateChoresJson = () => {
   });
 
   fileWriter("chores", result);
-  fileWriter("tasks", {
-    skills: skillDefinitions,
-    warnings: warningDefinitions,
-    personOfDay,
-  });
+
+  tasks.skills = skillDefinitions;
+  tasks.warnings = warningDefinitions;
+
+  fileWriter("tasks", tasks);
 };
