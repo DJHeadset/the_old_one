@@ -1,13 +1,9 @@
 function choosePersonOfDay(pod) {
   const children = ["Zolika", "Manó", "Bogi"];
-
-  const start = new Date("2025-04-26");
+  const start = new Date("2025-04-27");
   const today = new Date();
-
   const days = Math.floor((today - start) / 86400000);
-
   const kid = children[days % children.length];
-
   const random = Math.floor(Math.random() * 100);
 
   if (random < pod.dadLast) {
@@ -24,7 +20,6 @@ function choosePersonOfDay(pod) {
 function updatePersonOfDay() {
   const { getOldJson } = require("./getOldJson");
   const { fileWriter } = require("./fileWriter");
-
   const pod = getOldJson("tasks.json");
 
   pod.today = pod.tomorrow ?? "";

@@ -4,6 +4,7 @@ const { fileWriter } = require("./fileWriter");
 const { calculateStars, calculateTitle } = require("./choreService");
 const { consoleLogger } = require("./consoleLogger");
 const { updatePersonOfDay } = require("./personOfDayService");
+const { loadWorkbook } = require("./excelService");
 
 function buildImageMap(workbook) {
   const imageMap = {};
@@ -168,10 +169,9 @@ function buildKidState(oldState, kidName, chores, skillDefinitions) {
 }
 
 exports.generateChoresJson = () => {
-  const excelPath = "/app/excel/NapirendTest.xlsx";
   const now = new Date();
   const currentHour = now.getHours();
-  const wb = XLSX.readFile(excelPath);
+  const wb = loadWorkbook();
   const sheets = wb.SheetNames;
   const oldState = getOldJson("chores.json");
   const tasks = getOldJson("tasks.json");

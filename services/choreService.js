@@ -97,7 +97,7 @@ function calculateStars(xp) {
 
 function calculateTitle(stars, titles) {
   if (!titles || stars <= 0) return "";
-  return titles[stars - 1] || "";
+  return titles[stars] || "";
 }
 
 function buildSkills(oldState, kidName, skillDefinitions) {

@@ -8,7 +8,6 @@ const {
 const { fileWriter } = require("../services/fileWriter");
 const { generateChoresJson } = require("../services/choreGeneratorService");
 const { getOldJson } = require("../services/getOldJson");
-const XLSX = require("xlsx");
 const { updatePersonOfDay } = require("../services/personOfDayService");
 const { consoleLogger } = require("../services/consoleLogger");
 
