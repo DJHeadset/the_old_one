@@ -1,5 +1,4 @@
 const {
-  updatePoints,
   completeChores,
   runMidnight,
   runHourlyUpdate,
@@ -11,6 +10,7 @@ const { generateChoresJson } = require("../services/choreGeneratorService");
 const { getOldJson } = require("../services/getOldJson");
 const XLSX = require("xlsx");
 const { updatePersonOfDay } = require("../services/personOfDayService");
+const { consoleLogger } = require("../services/consoleLogger");
 
 function serveChore(req, res, next) {
   try {
@@ -35,8 +35,6 @@ function completeChore(req, res, next) {
 function extraChoreComplete(req, res, next) {
   try {
     const { kid, task } = req.body;
-
-    console.log("Extra chore:", kid, task);
 
     const skillDefinitions = getOldJson("tasks.json");
 
@@ -88,17 +86,6 @@ function extraChoreComplete(req, res, next) {
     fileWriter("chores", state);
 
     res.json(state[kid]);
-  } catch (err) {
-    next(err);
-  }
-}
-
-function scoreUpdate(req, res, next) {
-  try {
-    const state = getOldJson("chores.json");
-    const updatedState = updatePoints(state, req.body);
-    fileWriter("chores", updatedState);
-    res.status(200).json({ success: true });
   } catch (err) {
     next(err);
   }
@@ -183,6 +170,5 @@ module.exports = {
   regenerateChores,
   resetHourly,
   resetMidnight,
-  scoreUpdate,
   punishment,
 };

@@ -12,5 +12,5 @@ exports.fileWriter = (filename, result) => {
   fs.writeFileSync(tempPath, JSON.stringify(result, null, 2), "utf8");
   fs.renameSync(tempPath, outputPath);
 
-  consoleLogger(`Chores JSON updated: ${Object.keys(result).join(", ")}`);
+  consoleLogger(`Chores JSON updated`);
 };

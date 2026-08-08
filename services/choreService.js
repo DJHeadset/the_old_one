@@ -19,14 +19,6 @@ function completeChores(state, payload) {
   return newState;
 }
 
-function updatePoints(state, payload) {
-  const newState = structuredClone(state);
-  newState[payload.kid].actualScore += payload.point;
-  newState[payload.kid].percent = percentCalculator(newState[payload.kid]);
-  fileLogger(`${payload.kid} ${payload.point}`);
-  return newState;
-}
-
 function runMidnight(state) {
   const today = new Date().toISOString().split("T")[0];
   const newState = structuredClone(state);
@@ -105,7 +97,7 @@ function calculateStars(xp) {
 
 function calculateTitle(stars, titles) {
   if (!titles || stars <= 0) return "";
-  return titles[stars] || "";
+  return titles[stars - 1] || "";
 }
 
 function buildSkills(oldState, kidName, skillDefinitions) {
@@ -130,7 +122,6 @@ function buildSkills(oldState, kidName, skillDefinitions) {
 }
 module.exports = {
   completeChores,
-  updatePoints,
   runMidnight,
   runHourlyUpdate,
   calculateStars,

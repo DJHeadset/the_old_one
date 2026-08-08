@@ -5,7 +5,6 @@ const {
   regenerateChores,
   resetHourly,
   resetMidnight,
-  scoreUpdate,
   extraChoreComplete,
   serveChore,
   punishment,
@@ -17,7 +16,6 @@ router.post("/extra_chore", extraChoreComplete);
 router.post("/update_chore", regenerateChores);
 router.post("/update_hourly", resetHourly);
 router.post("/update_midnight", resetMidnight);
-router.post("/update_score", scoreUpdate);
-router.post("/punishment", punishment)
+router.post("/punishment", punishment);
 
 module.exports = router;

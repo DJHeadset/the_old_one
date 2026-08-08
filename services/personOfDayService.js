@@ -8,9 +8,6 @@ function choosePersonOfDay(pod) {
 
   const kid = children[days % children.length];
 
-  pod.dadLast = (pod.dadLast ?? 0) + 1;
-  pod.momLast = (pod.momLast ?? 0) + 1;
-
   const random = Math.floor(Math.random() * 100);
 
   if (random < pod.dadLast) {
@@ -37,6 +34,9 @@ function updatePersonOfDay() {
   } else if (pod.today === "Anya") {
     pod.momLast = 0;
   }
+
+  pod.dadLast = (pod.dadLast ?? 0) + 1;
+  pod.momLast = (pod.momLast ?? 0) + 1;
 
   const updated = choosePersonOfDay(pod);
 
