@@ -1,4 +1,6 @@
 const { consoleLogger } = require("../services/consoleLogger");
+const { fileWriter } = require("../services/fileWriter");
+const { getOldJson } = require("../services/getOldJson");
 const { skip, hardDay } = require("../services/miscService");
 const { getShopInfo } = require("../services/shopService");
 
@@ -26,7 +28,30 @@ function getShop(req, res, next) {
   res.status(200).json({ shop });
 }
 
+function titleChange(req, res, next) {
+  const { kid, title } = req.body;
+  console.log(`${kid} -> ${title}`);
+
+  const chores = getOldJson("chores.json");
+
+  if (!chores[kid]) {
+    return res.status(404).json({
+      error: `Kid not found: ${kid}`,
+    });
+  }
+
+  chores[kid].activeTitle = title;
+
+  fileWriter("chores", chores);
+
+  return res.status(200).json({
+    kid,
+    title,
+  });
+}
+
 module.exports = {
   personChange,
   getShop,
+  titleChange,
 };
