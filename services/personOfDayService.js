@@ -1,7 +1,8 @@
 function choosePersonOfDay(pod) {
   const children = ["Zolika", "Manó", "Bogi"];
-  const start = new Date("2025-04-27");
-  const today = new Date();
+  const start = Date.UTC(2025, 3, 27);
+  const now = new Date();
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
   const days = Math.floor((today - start) / 86400000);
   const kid = children[days % children.length];
   const random = Math.floor(Math.random() * 100);

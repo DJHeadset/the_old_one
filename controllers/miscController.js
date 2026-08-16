@@ -50,8 +50,46 @@ function titleChange(req, res, next) {
   });
 }
 
+function shopping(req, res) {
+  const { kid, item } = req.body;
+
+  const chores = getOldJson("chores.json");
+
+  // Find kid
+  const kidData = chores[kid];
+
+  // Find item in shop
+  const shop = getShopInfo();
+  const shopItem = shop.find((x) => x.item === item);
+
+  if (!kidData || !shopItem) {
+    return res.status(400).json({
+      error: "Invalid kid or item",
+    });
+  }
+
+  const price = shopItem.points;
+
+  if (kidData.gold < price) {
+    return res.status(400).json({
+      error: "Not enough gold",
+      gold: kidData.gold,
+    });
+  }
+
+  kidData.gold -= price;
+
+  fileWriter("chores", chores);
+
+  return res.status(200).json({
+    success: true,
+    gold: kidData.gold,
+  });
+}
+
 module.exports = {
   personChange,
   getShop,
   titleChange,
+  shopping,
 };
