@@ -13,7 +13,7 @@ const { consoleLogger } = require("../services/consoleLogger");
 
 function serveChore(req, res, next) {
   try {
-    const state = getOldJson("chores.json");
+    const state = getOldJson(req.params.filename);
     res.status(200).json(state);
   } catch (err) {
     next(err);

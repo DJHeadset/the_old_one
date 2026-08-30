@@ -10,7 +10,7 @@ const {
   punishment,
 } = require("../controllers/choresController");
 
-router.get("/get_chores", serveChore);
+router.get("/get_chores:filename", serveChore);
 router.post("/complete_chore", completeChore);
 router.post("/extra_chore", extraChoreComplete);
 router.post("/update_chore", regenerateChores);

@@ -26,9 +26,9 @@ function updatePersonOfDay() {
   pod.today = pod.tomorrow ?? "";
 
   if (pod.today === "Apa") {
-    pod.dadLast = 0;
+    pod.dadLast = -1;
   } else if (pod.today === "Anya") {
-    pod.momLast = 0;
+    pod.momLast = -1;
   }
 
   pod.dadLast = (pod.dadLast ?? 0) + 1;

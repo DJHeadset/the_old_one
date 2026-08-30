@@ -4,13 +4,14 @@ const {
   getShop,
   titleChange,
   shopping,
+  pillHandler,
 } = require("../controllers/miscController");
 const router = express.Router();
 
 router.post("/person_of_day", personChange);
 router.get("/get_shop", getShop);
 router.post("/buy_shop", shopping);
-
+router.post("/pills", pillHandler)
 router.post("/change_tittle", titleChange);
 
 module.exports = router;

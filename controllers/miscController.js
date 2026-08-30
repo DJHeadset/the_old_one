@@ -87,9 +87,41 @@ function shopping(req, res) {
   });
 }
 
+function pillHandler(req, res) {
+  console.log(req.body);
+
+  const { item, boxes, amount } = req.body;
+
+  const tasks = getOldJson("tasks.json");
+
+  const medication = tasks.medications[item];
+
+  if (!medication) {
+    return res.status(404).json({
+      success: false,
+      error: "Medication not found",
+    });
+  }
+
+    if (amount !== undefined) {
+    medication.quantity -= Number(amount);
+  } else {
+    medication.quantity += Number(boxes) * medication.perBox;
+  }
+
+  fileWriter("tasks", tasks);
+
+  return res.status(200).json({
+    success: true,
+    item,
+    quantity: medication.quantity,
+  });
+}
+
 module.exports = {
   personChange,
   getShop,
   titleChange,
   shopping,
+  pillHandler,
 };
