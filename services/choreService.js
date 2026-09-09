@@ -1,4 +1,5 @@
 const { fileLogger } = require("./fileLogger");
+const { fileWriter, updateBackupStatus } = require("./fileWriter");
 const { getOldJson } = require("./getOldJson");
 const { percentCalculator } = require("./percentCalculator");
 
@@ -17,6 +18,21 @@ function completeChores(state, payload) {
   }
 
   return newState;
+}
+
+function updateHouseStatus() {
+  const status = getOldJson("house_status.json");
+
+  status._meta = {
+    ...(status._meta ?? {}),
+    lastUpdated: new Date().toISOString(),
+  };
+
+  status.backup = updateBackupStatus();
+
+  fileWriter("house_status", status);
+
+  return status;
 }
 
 function runMidnight(state) {
@@ -122,6 +138,7 @@ function buildSkills(oldState, kidName, skillDefinitions) {
 }
 module.exports = {
   completeChores,
+  updateHouseStatus,
   runMidnight,
   runHourlyUpdate,
   calculateStars,

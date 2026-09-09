@@ -4,6 +4,7 @@ const {
   runHourlyUpdate,
   calculateStars,
   calculateTitle,
+  updateHouseStatus,
 } = require("../services/choreService");
 const { fileWriter } = require("../services/fileWriter");
 const { generateChoresJson } = require("../services/choreGeneratorService");
@@ -101,6 +102,8 @@ function resetMidnight(req, res, next) {
     updatePersonOfDay();
 
     generateChoresJson();
+
+    updateHouseStatus();
 
     res.json({
       success: true,
