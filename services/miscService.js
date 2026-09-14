@@ -1,6 +1,10 @@
 const { fileWriter } = require("./fileWriter");
 const { getOldJson } = require("./getOldJson");
 const { choosePersonOfDay } = require("./personOfDayService");
+const { execFile } = require("child_process");
+const { promisify } = require("util");
+
+const execFileAsync = promisify(execFile);
 
 function skip(person) {
   const pod = getOldJson("tasks.json");
@@ -22,4 +26,15 @@ function hardDay(person) {
   fileWriter("tasks", pod);
 }
 
-module.exports = { skip, hardDay };
+async function pinger(ip) {
+  console.log(ip);
+  try {
+    await execFileAsync("ping", ["-c", "1", "-W", "2", ip]);
+
+    return "ONLINE";
+  } catch (err) {
+    return "OFFLINE";
+  }
+}
+
+module.exports = { skip, hardDay, pinger };

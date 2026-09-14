@@ -1,7 +1,7 @@
 const { consoleLogger } = require("../services/consoleLogger");
 const { fileWriter } = require("../services/fileWriter");
 const { getOldJson } = require("../services/getOldJson");
-const { skip, hardDay } = require("../services/miscService");
+const { skip, hardDay, pinger } = require("../services/miscService");
 const { getShopInfo } = require("../services/shopService");
 
 function personChange(req, res, next) {
@@ -26,6 +26,15 @@ function getShop(req, res, next) {
   const shop = getShopInfo();
 
   res.status(200).json({ shop });
+}
+
+function getHouseStatus(req, res, next) {
+  //console.log("House Status")
+  const data = getOldJson("house_status.json");
+  data.internet = pinger("1.1.1.1");
+  data.atticuus = pinger("192.168.0.150");
+  //console.log(data)
+  res.status(200).json({ data });
 }
 
 function titleChange(req, res, next) {
@@ -103,7 +112,7 @@ function pillHandler(req, res) {
     });
   }
 
-    if (amount !== undefined) {
+  if (amount !== undefined) {
     medication.quantity -= Number(amount);
   } else {
     medication.quantity += Number(boxes) * medication.perBox;
@@ -121,6 +130,7 @@ function pillHandler(req, res) {
 module.exports = {
   personChange,
   getShop,
+  getHouseStatus,
   titleChange,
   shopping,
   pillHandler,
