@@ -113,6 +113,7 @@ function pillHandler(req, res) {
   const { item, boxes, amount } = req.body;
 
   const tasks = getOldJson("tasks.json");
+  const houseStatus = getOldJson("house_status.json");
 
   const medication = tasks.medications[item];
 
@@ -130,6 +131,15 @@ function pillHandler(req, res) {
   }
 
   fileWriter("tasks", tasks);
+
+  houseStatus.medications = tasks.medications;
+  fileWriter("house_status", houseStatus);
+
+  return res.status(200).json({
+    success: true,
+    item,
+    quantity: medication.quantity,
+  });
 
   return res.status(200).json({
     success: true,

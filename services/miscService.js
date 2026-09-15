@@ -42,7 +42,6 @@ function getAtticuusHdd() {
 
   const hdd = {
     total: null,
-
     available: null,
   };
 
