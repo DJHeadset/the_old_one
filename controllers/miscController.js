@@ -1,7 +1,12 @@
 const { consoleLogger } = require("../services/consoleLogger");
 const { fileWriter } = require("../services/fileWriter");
 const { getOldJson } = require("../services/getOldJson");
-const { skip, hardDay, pinger } = require("../services/miscService");
+const {
+  skip,
+  hardDay,
+  pinger,
+  getAtticuusHdd,
+} = require("../services/miscService");
 const { getShopInfo } = require("../services/shopService");
 
 function personChange(req, res, next) {
@@ -33,12 +38,13 @@ async function getHouseStatus(req, res, next) {
   const data = getOldJson("house_status.json");
   const [internet, atticuus] = await Promise.all([
     pinger("1.1.1.1"),
-    pinger("192.168.0.150")
+    pinger("192.168.0.150"),
   ]);
 
-    data.internet = internet;
+  data.internet = internet;
   data.atticuus = atticuus;
-  console.log(data)
+  data.atticuus_hdd = getAtticuusHdd();
+  //console.log(data);
   res.status(200).json({ data });
 }
 
@@ -102,7 +108,7 @@ function shopping(req, res) {
 }
 
 function pillHandler(req, res) {
-  console.log(req.body);
+  //console.log(req.body);
 
   const { item, boxes, amount } = req.body;
 
