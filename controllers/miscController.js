@@ -28,12 +28,17 @@ function getShop(req, res, next) {
   res.status(200).json({ shop });
 }
 
-function getHouseStatus(req, res, next) {
+async function getHouseStatus(req, res, next) {
   //console.log("House Status")
   const data = getOldJson("house_status.json");
-  data.internet = pinger("1.1.1.1");
-  data.atticuus = pinger("192.168.0.150");
-  //console.log(data)
+  const [internet, atticuus] = await Promise.all([
+    pinger("1.1.1.1"),
+    pinger("192.168.0.150")
+  ]);
+
+    data.internet = internet;
+  data.atticuus = atticuus;
+  console.log(data)
   res.status(200).json({ data });
 }
 
