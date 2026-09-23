@@ -43,7 +43,11 @@ async function getHouseStatus(req, res, next) {
 
   data.internet = internet;
   data.atticuus = atticuus;
-  data.atticuus_hdd = getAtticuusHdd();
+  if (atticuus === "ONLINE") {
+    data.atticuus_hdd = getAtticuusHdd();
+  } else {
+    data.atticuus_hdd = {};
+  }
   //console.log(data);
   res.status(200).json({ data });
 }
