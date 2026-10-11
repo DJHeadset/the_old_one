@@ -6,6 +6,7 @@ const {
   shopping,
   pillHandler,
   getHouseStatus,
+  getPiHole,
 } = require("../controllers/miscController");
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.get("/get_status", getHouseStatus);
 router.post("/buy_shop", shopping);
 router.post("/pills", pillHandler);
 router.post("/change_tittle", titleChange);
+router.get("/get_pihole", getPiHole);
 
 module.exports = router;

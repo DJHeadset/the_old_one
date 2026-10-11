@@ -7,6 +7,7 @@ const {
   pinger,
   getAtticuusHdd,
 } = require("../services/miscService");
+const { getPiHoleInfo } = require("../services/piHoleService");
 const { getShopInfo } = require("../services/shopService");
 
 function personChange(req, res, next) {
@@ -34,7 +35,6 @@ function getShop(req, res, next) {
 }
 
 async function getHouseStatus(req, res, next) {
-  //console.log("House Status")
   const data = getOldJson("house_status.json");
   const [internet, atticuus] = await Promise.all([
     pinger("1.1.1.1"),
@@ -48,13 +48,11 @@ async function getHouseStatus(req, res, next) {
   } else {
     data.atticuus_hdd = {};
   }
-  //console.log(data);
   res.status(200).json({ data });
 }
 
 function titleChange(req, res, next) {
   const { kid, title } = req.body;
-  console.log(`${kid} -> ${title}`);
 
   const chores = getOldJson("chores.json");
 
@@ -112,8 +110,6 @@ function shopping(req, res) {
 }
 
 function pillHandler(req, res) {
-  //console.log(req.body);
-
   const { item, boxes, amount } = req.body;
 
   const tasks = getOldJson("tasks.json");
@@ -152,6 +148,24 @@ function pillHandler(req, res) {
   });
 }
 
+async function getPiHole(req, res, next) {
+  try {
+    const info = await getPiHoleInfo();
+    res.status(200).json({ data: info });
+  } catch (error) {
+    console.error("Pi-hole status check failed:", error.message);
+
+    res.status(503).json({
+      data: {
+        online: false,
+        dns: false,
+        dhcp: false,
+      },
+      error: "Pi-hole status unavailable",
+    });
+  }
+}
+
 module.exports = {
   personChange,
   getShop,
@@ -159,4 +173,5 @@ module.exports = {
   titleChange,
   shopping,
   pillHandler,
+  getPiHole,
 };

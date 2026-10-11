@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 5000;
 const cors = require("cors")
+require("dotenv").config()
 const choresRouter = require("./routes/choresRoute");
 const rouletteRouter = require("./routes/rouletteRoute");
 const miscRouter = require("./routes/miscRoute")
