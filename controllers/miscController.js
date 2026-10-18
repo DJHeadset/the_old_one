@@ -1,4 +1,5 @@
 const { consoleLogger } = require("../services/consoleLogger");
+const { getCurrentThings } = require("../services/currentThingsService");
 const { fileWriter } = require("../services/fileWriter");
 const { getOldJson } = require("../services/getOldJson");
 const {
@@ -166,6 +167,23 @@ async function getPiHole(req, res, next) {
   }
 }
 
+function serveCurrentThings(req, res, next) {
+  try {
+    const trends = getCurrentThings();
+
+    if (!trends || !Array.isArray(trends.current_things)) {
+      return res.status(404).json({
+        success: false,
+        message: "Current trends are not available yet",
+      });
+    }
+
+    return res.json(trends);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   personChange,
   getShop,
@@ -174,4 +192,5 @@ module.exports = {
   shopping,
   pillHandler,
   getPiHole,
+  serveCurrentThings,
 };

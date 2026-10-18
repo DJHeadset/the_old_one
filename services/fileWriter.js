@@ -12,7 +12,7 @@ exports.fileWriter = (filename, result) => {
   fs.writeFileSync(tempPath, JSON.stringify(result, null, 2), "utf8");
   fs.renameSync(tempPath, outputPath);
 
-  consoleLogger(`Chores JSON updated`);
+  consoleLogger(`${filename} JSON updated`);
 };
 
 exports.updateBackupStatus = () => {

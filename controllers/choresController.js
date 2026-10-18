@@ -11,6 +11,7 @@ const { generateChoresJson } = require("../services/choreGeneratorService");
 const { getOldJson } = require("../services/getOldJson");
 const { updatePersonOfDay } = require("../services/personOfDayService");
 const { consoleLogger } = require("../services/consoleLogger");
+const { CheckCurrentThings } = require("../services/currentThingsService");
 
 function serveChore(req, res, next) {
   try {
@@ -91,7 +92,7 @@ function extraChoreComplete(req, res, next) {
   }
 }
 
-function resetMidnight(req, res, next) {
+async function resetMidnight(req, res, next) {
   try {
     const state = getOldJson("chores.json");
 
@@ -104,6 +105,12 @@ function resetMidnight(req, res, next) {
     generateChoresJson();
 
     updateHouseStatus();
+
+    try {
+      await CheckCurrentThings();
+    } catch (error) {
+      console.error("Current Things update failed:", error.message);
+    }
 
     res.json({
       success: true,
