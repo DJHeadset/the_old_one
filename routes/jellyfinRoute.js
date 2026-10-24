@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const { itemAdded } = require("../controllers/jellyfinController");
 
 router.post(
-  "/item-added",
+  "/item_added",
   (req, res, next) => {
     const expectedToken = process.env.JELLYFIN_WEBHOOK_TOKEN;
     const suppliedToken = req.query.token;
