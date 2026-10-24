@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { consoleLogger } = require("../services/consoleLogger");
+const { consoleLogger } = require("./consoleLogger");
 const path = require("path");
 
 exports.getOldJson = (filename) => {

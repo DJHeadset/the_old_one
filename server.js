@@ -6,6 +6,7 @@ require("dotenv").config()
 const choresRouter = require("./routes/choresRoute");
 const rouletteRouter = require("./routes/rouletteRoute");
 const miscRouter = require("./routes/miscRoute")
+const jellyfinRouter = require("./routes/jellyfinRoute")
 
 const allowedOrigins = [
   "http://192.168.0.38:3000",
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/chores", choresRouter);
 app.use("/roulette", rouletteRouter);
 app.use("/misc", miscRouter)
+app.use("/jellyfin", jellyfinRouter)
 
 app.use((err, req, res, next) => {
   console.error(err);
