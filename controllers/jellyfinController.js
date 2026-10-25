@@ -1,8 +1,13 @@
+const { get } = require("../routes/jellyfinRoute");
 const { consoleLogger } = require("../services/consoleLogger");
 const { fileWriter } = require("../services/fileWriter");
 const { getOldJson } = require("../services/getOldJson");
 
 function itemAdded(req, res, next) {
+  const MAX_AGE_DAYS = 30;
+  const MAX_ITEMS = 500;
+  const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
   try {
     const event =
       typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
@@ -38,14 +43,34 @@ function itemAdded(req, res, next) {
       receivedAt: new Date().toISOString(),
     };
 
-    events.push(record);
-    fileWriter("jellyfin_events", events);
-    consoleLogger(`[Jellyfin] New media: ${record.name}`);
+    const recentEvents = events.filter((entry) => {
+      const timestamp = Date.parse(entry.receivedAt);
+      return Number.isFinite(timestamp) && timestamp >= cutoff;
+    });
 
-    return res.status(201).json({
+    const updatedEvents = [
+      record,
+      ...recentEvents.filter(
+        (entry) => String(entry.itemId) !== String(itemId),
+      ),
+    ]
+      .sort((a, b) => Date.parse(b.receivedAt) - Date.parse(a.receivedAt))
+      .slice(0, MAX_ITEMS);
+
+    const duplicate = events.some(
+      (entry) => String(entry.itemId) === String(itemId),
+    );
+
+    fileWriter("jellyfin_events", updatedEvents);
+    consoleLogger(
+      `[Jellyfin] ${duplicate ? "Updated" : "New media"}: ${record.name}`,
+    );
+
+    return res.status(duplicate ? 200 : 201).json({
       accepted: true,
-      duplicate: false,
+      duplicate,
       itemId,
+      retainedEvents: updatedEvents.length,
     });
   } catch (error) {
     console.error("[Jellyfin] Failed to record event:", error);
@@ -53,6 +78,17 @@ function itemAdded(req, res, next) {
   }
 }
 
+function getJellyfin (req, res, next) {
+  try {
+    const state = getOldJson("jellyfin_events.json")
+    res.status(200).json(state)
+  } catch (error) {
+    console.error("[Jellyfin] Failed to get file:", error);
+    return res.status(500).json({ error: "Failed to get events" });
+  }
+}
+
 module.exports = {
   itemAdded,
+  getJellyfin,
 };

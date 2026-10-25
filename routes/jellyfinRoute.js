@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
-const { itemAdded } = require("../controllers/jellyfinController");
+const { itemAdded, getJellyfin } = require("../controllers/jellyfinController");
 
 router.post(
   "/item_added",
@@ -29,5 +29,7 @@ router.post(
   },
   itemAdded,
 );
+
+router.get("/get_items", getJellyfin)
 
 module.exports = router;
