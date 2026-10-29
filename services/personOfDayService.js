@@ -21,8 +21,8 @@ function choosePersonOfDay(pod) {
 function updatePersonOfDay() {
   const { getOldJson } = require("./getOldJson");
   const { fileWriter } = require("./fileWriter");
-  const pod = getOldJson("tasks.json");
   const houseStatus = getOldJson("house_status.json");
+  const pod = houseStatus;
 
   pod.today = pod.tomorrow ?? "";
 
@@ -36,8 +36,6 @@ function updatePersonOfDay() {
   pod.momLast = (pod.momLast ?? 0) + 1;
 
   const updated = choosePersonOfDay(pod);
-
-  fileWriter("tasks", updated);
 
   houseStatus.today = updated.today;
   houseStatus.dadLast = updated.dadLast;
