@@ -1,4 +1,3 @@
-const { get } = require("../routes/jellyfinRoute");
 const { consoleLogger } = require("../services/consoleLogger");
 const { fileWriter } = require("../services/fileWriter");
 const { getOldJson } = require("../services/getOldJson");
@@ -78,10 +77,10 @@ function itemAdded(req, res, next) {
   }
 }
 
-function getJellyfin (req, res, next) {
+function getJellyfin(req, res, next) {
   try {
-    const state = getOldJson("jellyfin_events.json")
-    res.status(200).json(state)
+    const state = getOldJson("jellyfin_events.json");
+    res.status(200).json(state);
   } catch (error) {
     console.error("[Jellyfin] Failed to get file:", error);
     return res.status(500).json({ error: "Failed to get events" });

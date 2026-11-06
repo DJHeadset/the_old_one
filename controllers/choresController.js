@@ -12,6 +12,7 @@ const { getOldJson } = require("../services/getOldJson");
 const { updatePersonOfDay } = require("../services/personOfDayService");
 const { consoleLogger } = require("../services/consoleLogger");
 const { CheckCurrentThings } = require("../services/currentThingsService");
+const { getYoutubeWatchlist } = require("./youtubeWatchlistController");
 
 function serveChore(req, res, next) {
   try {
@@ -110,6 +111,12 @@ async function resetMidnight(req, res, next) {
       await CheckCurrentThings();
     } catch (error) {
       console.error("Current Things update failed:", error.message);
+    }
+
+    try {
+      await getYoutubeWatchlist();
+    } catch (error) {
+      console.error("YouTube Watchlist update failed:", error.message);
     }
 
     res.json({
