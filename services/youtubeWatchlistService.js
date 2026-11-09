@@ -232,6 +232,25 @@ async function collectYoutubeWatchlist() {
 
       const cleanVideos = newVideos.map(({ videoId, ...video }) => video);
 
+      // Remove videos watched more than 7 days ago.
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 7);
+      const cutoffDate = cutoff.toISOString().slice(0, 10);
+
+      const previousCount = creator.videos.length;
+
+      creator.videos = creator.videos.filter((video) => {
+        if (video.watched === false) return true;
+
+        return video.watched >= cutoffDate;
+      });
+
+      const removedCount = previousCount - creator.videos.length;
+
+      if (removedCount > 0) {
+        console.log(`${creator.name}: removed ${removedCount} watched videos`);
+      }
+
       creator.videos = [...creator.videos, ...cleanVideos].sort(
         (a, b) => new Date(a.date) - new Date(b.date),
       );
