@@ -13,6 +13,7 @@ const {
   getYoutubeWatchlist,
   complieYoutubeWatchlist,
   watchedVideo,
+  seenVideo,
 } = require("../controllers/youtubeWatchlistController");
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.get("/get_current_things", serveCurrentThings);
 router.get("/get_watchlist", getYoutubeWatchlist);
 router.get("/collect", complieYoutubeWatchlist);
 router.post("/watched", watchedVideo);
+router.post("/seen", seenVideo);
 
 module.exports = router;

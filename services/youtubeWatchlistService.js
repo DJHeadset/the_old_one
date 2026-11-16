@@ -161,7 +161,14 @@ function isShort(duration) {
 async function collectYoutubeWatchlist() {
   console.log("Starting YouTube watchlist collection");
 
-  const watchlist = getOldJson(WATCHLIST_FILE);
+  const storedData = getOldJson(WATCHLIST_FILE);
+
+  const watchlist = Array.isArray(storedData)
+    ? storedData
+    : storedData.creators || [];
+
+  let newVideos = Number(storedData.newVideos) || 0;
+
   const scanStartedAt = new Date().toISOString();
 
   for (const creator of watchlist) {
@@ -230,7 +237,14 @@ async function collectYoutubeWatchlist() {
         return !existingLinks.has(video.link);
       });
 
-      const cleanVideos = newVideos.map(({ videoId, ...video }) => video);
+      const cleanVideos = newVideos.map(({ videoId, ...video }) => ({
+        ...video,
+        new: true,
+      }));
+
+      creator.videos = [...creator.videos, ...cleanVideos].sort(
+        (a, b) => new Date(a.date) - new Date(b.date),
+      );
 
       // Remove videos watched more than 7 days ago.
       const cutoff = new Date();

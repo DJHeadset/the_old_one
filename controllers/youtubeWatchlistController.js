@@ -50,4 +50,40 @@ async function watchedVideo(req, res, next) {
   }
 }
 
-module.exports = { getYoutubeWatchlist, complieYoutubeWatchlist, watchedVideo };
+async function seenVideo(req, res, next) {
+  const { creator, id } = req.body;
+
+  try {
+    const watchlist = getOldJson("youtube-watchlist.json");
+
+    const selectedCreator = watchlist.find(
+      (creatorChannel) => creatorChannel.name === creator,
+    );
+
+    if (!selectedCreator || !selectedCreator.videos[id]) {
+      return res.status(404).json({
+        success: false,
+        message: "Creator or video not found",
+      });
+    }
+
+    selectedCreator.videos[id].new = false;
+
+    fileWriter("youtube-watchlist", watchlist);
+
+    console.log(`Marked as seen: ${creator}, video ${id}`);
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = {
+  getYoutubeWatchlist,
+  complieYoutubeWatchlist,
+  watchedVideo,
+  seenVideo,
+};
