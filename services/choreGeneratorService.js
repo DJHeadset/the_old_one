@@ -2,8 +2,6 @@ const XLSX = require("xlsx");
 const { getOldJson } = require("./getOldJson");
 const { fileWriter } = require("./fileWriter");
 const { calculateStars, calculateTitle } = require("./choreService");
-const { consoleLogger } = require("./consoleLogger");
-const { updatePersonOfDay } = require("./personOfDayService");
 const { loadWorkbook } = require("./excelService");
 
 function buildImageMap(workbook) {

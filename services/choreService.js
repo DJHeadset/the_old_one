@@ -13,6 +13,7 @@ function completeChores(state, payload) {
       newState[payload.kid].chores[payload.index].kid = true;
     } else {
       newState[payload.kid].chores[payload.index].adult = true;
+      newState[payload.kid].chores[payload.index].kid = true;
       newState[payload.kid].percent = percentCalculator(newState[payload.kid]);
     }
   }

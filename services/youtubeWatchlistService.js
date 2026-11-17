@@ -1,3 +1,4 @@
+const { fileLogger } = require("./fileLogger");
 const { fileWriter } = require("./fileWriter");
 const { getOldJson } = require("./getOldJson");
 
@@ -263,6 +264,7 @@ async function collectYoutubeWatchlist() {
 
       if (removedCount > 0) {
         console.log(`${creator.name}: removed ${removedCount} watched videos`);
+        fileLogger(`${creator.name}: removed ${removedCount} watched videos`);
       }
 
       creator.videos = [...creator.videos, ...cleanVideos].sort(
@@ -279,6 +281,7 @@ async function collectYoutubeWatchlist() {
       creator.lastCheckedAt = scanStartedAt;
 
       console.log(`${creator.name}: ${newVideos.length} new videos found`);
+      fileLogger(`${creator.name}: ${newVideos.length} new videos found`);
     } catch (error) {
       console.error(`${creator.name} collection failed:`, error.message);
     }
@@ -287,6 +290,7 @@ async function collectYoutubeWatchlist() {
   fileWriter("youtube-watchlist", watchlist);
 
   console.log("YouTube watchlist collection complete");
+  fileLogger("YouTube watchlist collection complete");
 
   return watchlist;
 }

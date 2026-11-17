@@ -1,4 +1,5 @@
 const { consoleLogger } = require("../services/consoleLogger");
+const { fileLogger } = require("../services/fileLogger");
 const { fileWriter } = require("../services/fileWriter");
 const { getOldJson } = require("../services/getOldJson");
 
@@ -62,6 +63,9 @@ function itemAdded(req, res, next) {
 
     fileWriter("jellyfin_events", updatedEvents);
     consoleLogger(
+      `[Jellyfin] ${duplicate ? "Updated" : "New media"}: ${record.name}`,
+    );
+    fileLogger(
       `[Jellyfin] ${duplicate ? "Updated" : "New media"}: ${record.name}`,
     );
 

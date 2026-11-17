@@ -10,7 +10,6 @@ const { fileWriter } = require("../services/fileWriter");
 const { generateChoresJson } = require("../services/choreGeneratorService");
 const { getOldJson } = require("../services/getOldJson");
 const { updatePersonOfDay } = require("../services/personOfDayService");
-const { consoleLogger } = require("../services/consoleLogger");
 const { CheckCurrentThings } = require("../services/currentThingsService");
 const { complieYoutubeWatchlist } = require("./youtubeWatchlistController");
 
