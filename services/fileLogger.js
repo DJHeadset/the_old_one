@@ -7,7 +7,7 @@ const { fileWriter } = require("./fileWriter");
 
 exports.fileLogger = (message) => {
   const logDir = "/app/logs";
-  const maxMessages = 10;
+  const maxMessages = 9;
 
   try {
     fs.mkdirSync(logDir, { recursive: true });

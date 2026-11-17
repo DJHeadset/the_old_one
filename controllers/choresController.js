@@ -12,6 +12,7 @@ const { getOldJson } = require("../services/getOldJson");
 const { updatePersonOfDay } = require("../services/personOfDayService");
 const { CheckCurrentThings } = require("../services/currentThingsService");
 const { complieYoutubeWatchlist } = require("./youtubeWatchlistController");
+const { fileLogger } = require("../services/fileLogger");
 
 function serveChore(req, res, next) {
   try {
@@ -80,6 +81,8 @@ function extraChoreComplete(req, res, next) {
     // You need the skillDefinitions here
     const titles = skillDefinitions.skills[task];
     skill.title = calculateTitle(skill.stars, titles);
+
+    fileLogger(`${kid} completed: ${skill.name}`);
 
     const goldReward = Math.max(1, skill.stars) * 5;
     state[kid].gold += goldReward;
@@ -170,6 +173,7 @@ function punishment(req, res, next) {
     state[kid].gold = newGold;
     state[kid].warnings += 1;
 
+    fileLogger(`${kid} punished for: ${reason}`);
     fileWriter("chores", state);
 
     res.status(200).json({ kid: reason });
