@@ -184,6 +184,15 @@ function serveCurrentThings(req, res, next) {
   }
 }
 
+function getLatestMessages(req, res, next) {
+  try {
+    const messages = getOldJson("last_messages.json");
+    res.status(200).json(messages);
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   personChange,
   getShop,
@@ -193,4 +202,5 @@ module.exports = {
   pillHandler,
   getPiHole,
   serveCurrentThings,
+  getLatestMessages,
 };

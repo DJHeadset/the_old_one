@@ -8,6 +8,7 @@ const {
   getHouseStatus,
   getPiHole,
   serveCurrentThings,
+  getLatestMessages,
 } = require("../controllers/miscController");
 const {
   getYoutubeWatchlist,
@@ -29,5 +30,6 @@ router.get("/get_watchlist", getYoutubeWatchlist);
 router.get("/collect", complieYoutubeWatchlist);
 router.post("/watched", watchedVideo);
 router.post("/seen", seenVideo);
+router.get("/last_messages", getLatestMessages);
 
 module.exports = router;
