@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { consoleLogger } = require("./consoleLogger");
 const path = require("path");
+const { fileLogger } = require("./fileLogger");
 
 exports.fileWriter = (filename, result) => {
   consoleLogger("Writing JSON file");
@@ -60,6 +61,8 @@ exports.updateBackupStatus = () => {
     if (status.compose === "OK" && status.homeassistant === "OK") {
       status.status = "OK";
     }
+
+    fileLogger("Backup completed")
 
     return status;
   } catch (err) {

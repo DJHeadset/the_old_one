@@ -281,7 +281,9 @@ async function collectYoutubeWatchlist() {
       creator.lastCheckedAt = scanStartedAt;
 
       console.log(`${creator.name}: ${newVideos.length} new videos found`);
-      fileLogger(`${creator.name}: ${newVideos.length} new videos found`);
+      if(newVideos.length>0){
+        fileLogger(`${creator.name}: ${newVideos.length} new videos found`);
+      }
     } catch (error) {
       console.error(`${creator.name} collection failed:`, error.message);
     }
